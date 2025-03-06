@@ -19,6 +19,7 @@ const App = () => {
                 <Route path="/profile" component={Profile} />
                 <Route path="/admin" component={Admin} />
                 <Route path="/dashboard" component={User Dashboard} />
+                <Route path="/preferences" component={Preferences} />
             </Switch>
         </Router>
     );

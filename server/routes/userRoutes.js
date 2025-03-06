@@ -49,4 +49,17 @@ router.put('/preferences', auth, async (req, res) => {
     res.json(updatedUser );
 });
 
+// Update user favorites
+router.put('/favorites', auth, async (req, res) => {
+    const { restaurantId } = req.body;
+    const user = await User.findById(req.user._id);
+    if (user.favorites.includes(restaurantId)) {
+        user.favorites = user.favorites.filter(id => id !== restaurantId); // Remove from favorites
+    } else {
+        user.favorites.push(restaurantId); // Add to favorites
+    }
+    await user.save();
+    res.json(user);
+});
+
 module.exports = router;
