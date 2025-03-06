@@ -62,4 +62,17 @@ router.put('/favorites', auth, async (req, res) => {
     res.json(user);
 });
 
+// Verify email
+router.get('/verify/:token', async (req, res) => {
+    const { token } = req.params;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (!user) {
+        return res.status(400).send('Invalid token');
+    }
+    user.isVerified = true;
+    await user.save();
+    res.send('Email verified successfully');
+});
+
 module.exports = router;
