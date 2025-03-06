@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const Feedback = ({ restaurantId }) => {
-    const [message, setMessage] = useState('');
+const Feedback = ({ restaurantId, onReviewSubmitted }) => {
+    const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem('token');
-        await axios.post('/api/feedback', { restaurant: restaurantId, message }, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        setMessage('');
-        alert('Feedback submitted successfully!');
+        await axios.post('/api/reviews', { user: 'userId', restaurant: restaurantId, rating, comment });
+        setComment('');
+        setRating(0);
+        // Call the callback to refresh reviews
+        onReviewSubmitted();
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Leave your feedback" required />
-            <button type="submit">Submit Feedback</button>
+            <input type="number" value={rating} onChange={(e) => setRating(e.target.value)} placeholder="Rating (1-5)" min="1" max="5" required />
+            <textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Leave a comment" required />
+            <button type="submit">Submit Review</button>
         </form>
     );
 };
