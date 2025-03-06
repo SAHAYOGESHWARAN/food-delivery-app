@@ -34,4 +34,19 @@ router.post('/request-otp', async (req, res) => {
     res.json({ message: 'OTP sent to your email' });
 });
 
+
+// Update user profile
+router.put('/profile', async (req, res) => {
+    const { userId, name, email, phone } = req.body;
+    const updatedUser  = await User.findByIdAndUpdate(userId, { name, email, phone }, { new: true });
+    res.json(updatedUser );
+});
+
+// Update user preferences
+router.put('/preferences', auth, async (req, res) => {
+    const { preferences } = req.body;
+    const updatedUser  = await User.findByIdAndUpdate(req.user._id, { preferences }, { new: true });
+    res.json(updatedUser );
+});
+
 module.exports = router;
